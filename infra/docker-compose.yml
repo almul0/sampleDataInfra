@@ -6,6 +6,8 @@ services:
     - "27017:27017"
   postgreSQL:
     image: postgres:11-alpine
+    environment:
+     - POSTGRES_PASSWORD=postgres
     ports:
     - "5432:5432"
   mongo-seed:
@@ -15,4 +17,13 @@ services:
   postgres-seed:
     build: ./postgres-seed
     depends_on:
+      - postgreSQL
+  pyspark-notebook:
+    image: jupyter/pyspark-notebook
+    volumes:
+      - ./work:/home/jovyan/work
+    ports: 
+      - "8888:8888"
+    depends_on:
+      - mongodb
       - postgreSQL
